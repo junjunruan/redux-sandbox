@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NgRedux, select } from "ng2-redux";
-import { IAppState, rootReducer } from "./store";
-import { INCREMENT } from "./actions";
-import { applySourceSpanToExpressionIfNeeded } from "@angular/compiler/src/output/output_ast";
+import { IAppState } from "./store";
+import { ADD, INCREMENT, REMOVE, TOGGLE } from "./actions";
 
 @Component({
 	selector: 'app-root',
@@ -16,9 +15,11 @@ export class AppComponent {
 	// @select(s => s.get('counter')) count;
 	// @select(['messaging', 'newMessages']) newMessages;
 	// @select((s: IAppState) => s.messaging.newMessages) newMessage;
-    title = 'app';
+    title = '';
+	// todos: any[];
+	@select() todos;
 
-    constructor(private ngRedux: NgRedux<Map<string, any>>) {
+    constructor(private ngRedux: NgRedux<IAppState>) {
 		// var subscription = ngRedux.subscribe(() => {
 		// 	let store = ngRedux.getState();
 		// 	this.counter = store.counter;
@@ -27,6 +28,24 @@ export class AppComponent {
 
     increment() {
     	// this.ngRedux.dispatch({ type: 'INCREMENT', body: '', subject: ''});
-	    this.ngRedux.dispatch({ type: INCREMENT});
+	    this.ngRedux.dispatch({ type: INCREMENT });
     }
+
+	onKeyup(e) {
+    	this.title = e.target.value;
+    	console.log(this.title);
+	}
+
+	addItem(inputTitle) {
+		this.ngRedux.dispatch({ type: ADD, title: this.title });
+		inputTitle.value = '';
+	}
+
+	toggleTitle(todo) {
+		this.ngRedux.dispatch({ type: TOGGLE, id: todo.id });
+	}
+
+	removeItem(todo) {
+		this.ngRedux.dispatch({ type: REMOVE, id: todo.id });
+	}
 }

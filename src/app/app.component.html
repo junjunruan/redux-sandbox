@@ -21,4 +21,15 @@
 <p>Counter: {{counter | async}}</p>
 <button (click)="increment()">Increment</button>
 
+<input type="text" (keyup)="onKeyup($event)" #inputTitle>
+<button (click)="addItem(inputTitle)">Add</button>
+<ul>
+    <li *ngFor="let todo of todos | async">
+        <span (click)="toggleTitle(todo)" [class.toggled]="todo.isToggled"> {{todo.title}} </span>
+        <button (click)="removeItem(todo)">Remove</button>
+    </li>
+</ul>
+
+
+<todo-dashboard></todo-dashboard>
 
